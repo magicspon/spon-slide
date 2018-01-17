@@ -1,0 +1,18 @@
+{% import '@helpers' as h %}
+<div class="relative overflow-hidden h-screen" data-ui="slide">
+  <ul class="list-reset relative h-full">
+    {% for i in range(0, 1) %}
+      <li data-slide-item class=" invisible absolute pin-t pin-l w-full h-full  flex items-center justify-center text-5xl">
+				{{ loop.index }}
+      </li>
+    {% endfor %}
+  </ul>
+  <button href="#0" data-slide-prev class="c-slide__btn c-slide__btn--prev block absolute z-10 u-center-vert">
+    {{ h.symbol('ui-prev') }}
+  </button>
+  <button data-slide-next class="c-slide__btn c-slide__btn--next block absolute z-10 u-center-vert">
+    {{ h.symbol('ui-next') }}
+  </button>
+</div>
+
+

@@ -1,8 +1,12 @@
 # Wallop with whistles
 
+Inspired by: http://pedroduarte.me/wallop
+
+examples en route...
+
 ## Install
 
-`npm install spon-resize` or `yarn add spon-resize`
+`npm install spon-slide` or `yarn add spon-slide`
 
 Import
 
@@ -19,7 +23,6 @@ Import
 	delay: {Number}
 	wrap: {Boolean}
 	dots: {Boolean}
-	swipe: {Boolean}
 	startingIndex: {Function(items)} - must return {Number}
 	promiseBefore: {Boolean}
 	paginationParent: {Boolean}
