@@ -8,25 +8,34 @@ examples en route...
 
 `npm install spon-slide` or `yarn add spon-slide`
 
-Import
+### Import
 
-    Options:
+`import Slide from 'spon-slide'`
+
+### Start
 
 ```
-	animationType: {String} - animation, transition, custom
-	selector: {String} - css selector
-	previousButton: {String} - css selector
-	nextButton: {String} - css selector
-	activeClass: {String} - class name
-	loop: {Boolean}
-	delay: {Number}
-	wrap: {Boolean}
-	dots: {Boolean}
-	startingIndex: {Function(items)} - must return {Number}
-	promiseBefore: {Boolean}
-	paginationParent: {Boolean}
-	paginationWrapper: {String} - html
-	paginationButtons: {Function(items)} - must return an array eg: ['<button></button>','<button></button>']
+const slide = new Slide(element, options)
+slide.init()
+```
+
+### Options:
+
+```
+animationType: {String} - animation, transition, custom
+selector: {String} - css selector
+previousButton: {String} - css selector
+nextButton: {String} - css selector
+activeClass: {String} - class name
+loop: {Boolean}
+delay: {Number}
+wrap: {Boolean}
+dots: {Boolean}
+startingIndex: {Function(items)} - must return {Number}
+promiseBefore: {Boolean}
+paginationParent: {Boolean}
+paginationWrapper: {String} - html
+paginationButtons: {Function(items)} - must return an array eg: ['<button></button>','<button></button>']
 ```
 
 ### Events:
@@ -36,11 +45,11 @@ Called in order
 `const $n = new Slide($HTML, {})`
 
 ```
-	$n.on('spon:prev') - on prev click
-	$n.on('spon:next') - on next click
-	$n.on('spon:before') - before promise
-	$n.on('spon:change') - on change
-	$n.on('spon:after') - after animation
+$n.on('spon:prev', ({props}) => ()) - on prev click
+$n.on('spon:next', ({props}) => ()) - on next click
+$n.on('spon:before', (props, resolve) => ()) - before promise // only triggered when promiseBefore === true
+$n.on('spon:change', ({props}) => ()) - on change
+$n.on('spon:after', ({props}) => ()) - after animation
 ```
 
 ### API:
@@ -58,15 +67,15 @@ $n.setOptions(o) - update optios object
 ### HTML:
 
 ```
-	<div class="relative overflow-hidden data-ui="slide">
-		<ul>
-			<li data-slide-item>{{ loop.index }}</li>
-			<li data-slide-item>{{ loop.index }}</li>
-			<li data-slide-item>{{ loop.index }}</li>
-		</ul>
-		<a href="#0" data-slide-prev>prev</a>
-		<a href="#0" data-slide-next>next</a>
-	</div>
+<div class="relative overflow-hidden data-ui="slide">
+	<ul>
+		<li data-slide-item>{{ loop.index }}</li>
+		<li data-slide-item>{{ loop.index }}</li>
+		<li data-slide-item>{{ loop.index }}</li>
+	</ul>
+	<a href="#0" data-slide-prev>prev</a>
+	<a href="#0" data-slide-next>next</a>
+</div>
 ```
 
 ### Example CSS:
