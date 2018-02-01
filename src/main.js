@@ -1,11 +1,46 @@
 import mitt from 'mitt'
 
-import { mapNodesToMachine, eventPromise, animationEnd, domify } from './utils'
+const mapNodesToMachine = ($Elements, wrap = true) => {
+	return $Elements.map(($node, i, a) => {
+		return {
+			PREV: a[i - 1] ? i - 1 : wrap === true ? a.length - 1 : i,
+			NEXT: a[i + 1] ? i + 1 : wrap === true ? 0 : i
+		}
+	})
+}
+
+const eventPromise = (event, element, callback) => {
+	let complete = false
+
+	const done = (resolve, e) => {
+		e.stopPropagation()
+		element.removeEventListener(event, done)
+		if (e.target === element && !complete) {
+			complete = true
+			resolve()
+			return
+		}
+	}
+
+	return new Promise(resolve => {
+		callback && callback()
+		element.addEventListener(event, done.bind(null, resolve), false)
+	})
+}
+
+const domify = (() => {
+	const div = document.createElement('div')
+
+	return html => {
+		div.innerHTML = html
+		return div.children[0]
+	}
+})()
 
 /*
 	Options:
 
-	animationType: {String} - animation, transition, custom
+	animationType: {String} - animation, custom
 	selector: {String} - css selector
 	previousButton: {String} - css selector
 	nextButton: {String} - css selector
@@ -100,7 +135,6 @@ export default class {
 			selector,
 			previousButton,
 			nextButton,
-			animationType,
 			activeClass,
 			loop,
 			wrap,
@@ -114,7 +148,6 @@ export default class {
 		this.total = this.$slides.length - 1
 		this.$prevBtn = previousButton && this.$el.querySelector(previousButton)
 		this.$nextBtn = nextButton && this.$el.querySelector('[data-slide-next]')
-		this.animationEvent = animationEnd(animationType)
 
 		this.handle
 		this.timer
@@ -231,6 +264,7 @@ export default class {
 	 * @return void
 	 */
 	goTo = state => {
+		log(state)
 		if ((this.currentIndex === state && this.started) || this.isRuning) return
 		this.isRuning = true
 		const { activeClass, loop, animationType, dots, wrap } = this.options
@@ -258,7 +292,7 @@ export default class {
 			this._updateButtonStates(state)
 		}
 
-		if (animationType === 'animation' || animationType === 'transition') {
+		if (animationType !== 'custom') {
 			this.before({
 				...beforeProps
 			}).then(() => {
@@ -268,7 +302,7 @@ export default class {
 					.filter((_, index) => index !== this.currentIndex && index !== state)
 					.forEach(node => node.setAttribute('data-slide-item', ''))
 
-				eventPromise(this.animationEvent, $current, () => {
+				eventPromise('animationend webkitAnimationEnd', $current, () => {
 					$current.classList.remove(activeClass)
 					$current.setAttribute(
 						'data-slide-item',
