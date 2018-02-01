@@ -196,7 +196,6 @@ export default class {
 	 */
 	prev = e => {
 		e && e.preventDefault()
-		this.emit('spon:prev')
 		this._transition(this.currentIndex, 'PREV')
 	}
 
@@ -208,7 +207,6 @@ export default class {
 	 */
 	next = e => {
 		e && e.preventDefault()
-		this.emit('spon:next')
 		this._transition(this.currentIndex, 'NEXT')
 	}
 
@@ -315,6 +313,13 @@ export default class {
 	 */
 	_transition = (state, action) => {
 		const newState = this.machine[state][action]
+
+		this.emit(`spon:${action.toLowerCase()}`, {
+			current: this.currentIndex,
+			next: newState.index,
+			slides: this.$slides
+		})
+
 		this.goTo(newState.index)
 	}
 
