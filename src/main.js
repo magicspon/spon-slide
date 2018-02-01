@@ -59,7 +59,7 @@ export default class {
 		selector: '[data-slide-item]',
 		previousButton: '[data-slide-prev]',
 		nextButton: '[data-slide-next]',
-		activeClass: 'c-slide__item--current',
+		activeClass: 'is-current',
 		loop: false,
 		delay: 3000,
 		wrap: true,
@@ -68,10 +68,8 @@ export default class {
 		paginationParent: false,
 		animateOnInit: false,
 		startingIndex: () => 0,
-		paginationWrapper:
-			'<div class="absolute w-full pin-t z-10 flex justify-center"></div>',
-		paginationButtons: slides =>
-			slides.map(() => '<button><div>&#9679</div></button>')
+		paginationWrapper: '<div></div>',
+		paginationButtons: slides => slides.map(() => '<button />')
 	}
 
 	constructor($el, options = {}) {
@@ -295,12 +293,15 @@ export default class {
 				this.currentIndex = state
 			})
 		} else {
-			this._customTransition(beforeProps).then(() => {
+			this.before(beforeProps).then(() => {
 				dots && this._updatePagerButtons(state)
 				this.emit('spon:after', props)
 				this.currentIndex = state
 				this.isRuning = false
-				//	if (loop) this._loop()
+				if (loop) {
+					this._cancelLoop()
+					this._loop()
+				}
 			})
 		}
 	}
@@ -316,11 +317,11 @@ export default class {
 
 		this.emit(`spon:${action.toLowerCase()}`, {
 			current: this.currentIndex,
-			next: newState.index,
+			next: newState,
 			slides: this.$slides
 		})
 
-		this.goTo(newState.index)
+		this.goTo(newState)
 	}
 
 	_updateButtonStates = state => {
@@ -328,21 +329,6 @@ export default class {
 		const next = state === this.total
 		this.$prevBtn[prev ? 'setAttribute' : 'removeAttribute']('disabled', prev)
 		this.$nextBtn[next ? 'setAttribute' : 'removeAttribute']('disabled', next)
-	}
-
-	/**
-	 * hook used for custom transitons, when animation type is not animation or transition
-	 *
-	 * @function customTransition
-	 * @param {Object} props
-	 * @return Promise
-	 */
-	_customTransition = props => {
-		const { promiseBefore } = this.options
-		if (!promiseBefore) return Promise.resolve()
-		return new Promise(resolve => {
-			this.emit('spon:before', { props, resolve })
-		})
 	}
 
 	/**

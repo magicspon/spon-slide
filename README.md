@@ -34,8 +34,8 @@ dots: {Boolean}
 startingIndex: {Function(items)} - must return {Number}
 promiseBefore: {Boolean}
 paginationParent: {Boolean}
-paginationWrapper: {String} - html
-paginationButtons: {Function(items)} - must return an array eg: ['<button></button>','<button></button>']
+dotsWrapper: {String} - html
+dotsButtons: {Function(items)} - must return an array eg: ['<button></button>','<button></button>']
 ```
 
 ### Events:

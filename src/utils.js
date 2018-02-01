@@ -1,40 +1,13 @@
 export const mapNodesToMachine = ($Elements, wrap = true) => {
 	return $Elements.map(($node, i, a) => {
 		return {
-			PREV: a[i - 1]
-				? {
-						$el: a[i - 1],
-						index: i - 1
-					}
-				: wrap === true
-					? {
-							$el: a[a.length - 1],
-							index: a.length - 1
-						}
-					: {
-							$el: $node,
-							index: i
-						},
-
-			NEXT: a[i + 1]
-				? {
-						$el: a[i + 1],
-						index: i + 1
-					}
-				: wrap === true
-					? {
-							$el: a[0],
-							index: 0
-						}
-					: {
-							$el: a[i],
-							index: i
-						}
+			PREV: a[i - 1] ? i - 1 : wrap === true ? a.length - 1 : i,
+			NEXT: a[i + 1] ? i + 1 : wrap === true ? 0 : i
 		}
 	})
 }
 
-export const eventPromise = (event, element, callback = () => {}) => {
+export const eventPromise = (event, element, callback) => {
 	let complete = false
 
 	const done = (resolve, e) => {
@@ -48,30 +21,28 @@ export const eventPromise = (event, element, callback = () => {}) => {
 	}
 
 	return new Promise(resolve => {
-		callback()
+		callback && callback()
 		element.addEventListener(event, done.bind(null, resolve), false)
 	})
 }
 
-export const animationEnd = type => {
-	let types
-	if (type && ('transition' === type || 'trans' === type)) {
-		types = {
-			OTransition: 'oTransitionEnd',
-			WebkitTransition: 'webkitTransitionEnd',
-			MozTransition: 'transitionend',
-			transition: 'transitionend'
-		}
-	} else {
-		// animation is default
-		types = {
-			OAnimation: 'oAnimationEnd',
-			WebkitAnimation: 'webkitAnimationEnd',
-			MozAnimation: 'animationend',
-			animation: 'animationend'
-		}
-	}
-	const elem = document.createElement('fake')
+export const animationEnd = (type = 'transition') => {
+	const types =
+		type === 'transition'
+			? {
+					OTransition: 'oTransitionEnd',
+					WebkitTransition: 'webkitTransitionEnd',
+					MozTransition: 'transitionend',
+					transition: 'transitionend'
+				}
+			: {
+					OAnimation: 'oAnimationEnd',
+					WebkitAnimation: 'webkitAnimationEnd',
+					MozAnimation: 'animationend',
+					animation: 'animationend'
+				}
+
+	const elem = document.createElement('div')
 	return Object.keys(types).reduce(function(prev, trans) {
 		return undefined !== elem.style[trans] ? types[trans] : prev
 	}, '')
