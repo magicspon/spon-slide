@@ -1,7 +1,6 @@
 import mitt from 'mitt'
-import domify from 'domify'
 
-import { mapNodesToMachine, eventPromise, animationEnd } from './utils'
+import { mapNodesToMachine, eventPromise, animationEnd, domify } from './utils'
 
 /*
 	Options:
@@ -71,7 +70,8 @@ export default class {
 		startingIndex: () => 0,
 		paginationWrapper:
 			'<div class="absolute w-full pin-t z-10 flex justify-center"></div>',
-		paginationButtons: slides => slides.map(() => '<button>&#9679</button>')
+		paginationButtons: slides =>
+			slides.map(() => '<button><div>&#9679</div></button>')
 	}
 
 	constructor($el, options = {}) {
@@ -131,7 +131,7 @@ export default class {
 		dots && this._renderPager(this.startingIndex)
 		loop && this._loop()
 
-		this.animateOnInit && this.goTo(this.startingIndex)
+		animateOnInit && this.goTo(this.startingIndex)
 
 		this.started = true
 		return this
