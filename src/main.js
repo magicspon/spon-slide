@@ -131,7 +131,7 @@ export default class {
 		dots && this._renderPager(this.startingIndex)
 		loop && this._loop()
 
-		animateOnInit && this.goTo(this.startingIndex)
+		this.animateOnInit && this.goTo(this.startingIndex)
 
 		this.started = true
 		return this
@@ -209,7 +209,6 @@ export default class {
 	next = e => {
 		e && e.preventDefault()
 		this.emit('spon:next')
-		log(this.currentIndex)
 		this._transition(this.currentIndex, 'NEXT')
 	}
 

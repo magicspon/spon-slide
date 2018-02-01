@@ -3,38 +3,38 @@ export const mapNodesToMachine = ($Elements, wrap = true) => {
 		return {
 			PREV: a[i - 1]
 				? {
-						$el: a[i - 1],
-						index: i - 1
-					}
+					$el: a[i - 1],
+					index: i - 1
+				}
 				: wrap === true
 					? {
-							$el: a[a.length - 1],
-							index: a.length - 1
-						}
+						$el: a[a.length - 1],
+						index: a.length - 1
+					}
 					: {
-							$el: $node,
-							index: i
-						},
+						$el: $node,
+						index: i
+					},
 
 			NEXT: a[i + 1]
 				? {
-						$el: a[i + 1],
-						index: i + 1
-					}
+					$el: a[i + 1],
+					index: i + 1
+				}
 				: wrap === true
 					? {
-							$el: a[0],
-							index: 0
-						}
+						$el: a[0],
+						index: 0
+					}
 					: {
-							$el: a[i],
-							index: i
-						}
+						$el: a[i],
+						index: i
+					}
 		}
 	})
 }
 
-export const eventPromise = (event, element, callback = () => {}) => {
+export const eventPromise = (event, element, callback = () => { }) => {
 	let complete = false
 
 	const done = (resolve, e) => {
@@ -42,13 +42,13 @@ export const eventPromise = (event, element, callback = () => {}) => {
 		element.removeEventListener(event, done)
 		if (e.target === element && !complete) {
 			complete = true
-			callback()
 			resolve()
 			return
 		}
 	}
 
 	return new Promise(resolve => {
+		callback()
 		element.addEventListener(event, done.bind(null, resolve), false)
 	})
 }
@@ -72,7 +72,7 @@ export const animationEnd = type => {
 		}
 	}
 	const elem = document.createElement('fake')
-	return Object.keys(types).reduce(function(prev, trans) {
+	return Object.keys(types).reduce(function (prev, trans) {
 		return undefined !== elem.style[trans] ? types[trans] : prev
 	}, '')
 }
