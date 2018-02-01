@@ -10,10 +10,9 @@ examples en route...
 
 Import
 
-```
-/*
-	Options:
+    Options:
 
+```
 	animationType: {String} - animation, transition, custom
 	selector: {String} - css selector
 	previousButton: {String} - css selector
@@ -28,29 +27,37 @@ Import
 	paginationParent: {Boolean}
 	paginationWrapper: {String} - html
 	paginationButtons: {Function(items)} - must return an array eg: ['<button></button>','<button></button>']
+```
 
-	Events:
-	Called in order
-	const $n = new Slide($HTML, {})
+### Events:
 
-	$n.emitter('spon:prev') - on prev click
-	$n.emitter('spon:next') - on next click
-	$n.emitter('spon:before') - before promise
-	$n.emitter('spon:change') - on change
-	$n.emitter('spon:after') - after animation
+Called in order
 
-	API:
+`const $n = new Slide($HTML, {})`
 
-	$n.init() - start
-	$n.reset() - reset everything
-	$n.destroy() - kill it all
-	$n.next() - goto next
-	$n.prev() - goto prev
-	$n.goTo(n) - go to index
-	$n.setOptions(o) - update optios object
+```
+	$n.on('spon:prev') - on prev click
+	$n.on('spon:next') - on next click
+	$n.on('spon:before') - before promise
+	$n.on('spon:change') - on change
+	$n.on('spon:after') - after animation
+```
 
-	HTML:
+### API:
 
+```
+$n.init() - start
+$n.reset() - reset everything
+$n.destroy() - kill it all
+$n.next() - goto next
+$n.prev() - goto prev
+$n.goTo(n) - go to index
+$n.setOptions(o) - update optios object
+```
+
+### HTML:
+
+```
 	<div class="relative overflow-hidden data-ui="slide">
 		<ul>
 			<li data-slide-item>{{ loop.index }}</li>
@@ -60,6 +67,25 @@ Import
 		<a href="#0" data-slide-prev>prev</a>
 		<a href="#0" data-slide-next>next</a>
 	</div>
+```
 
-*/
+### Example CSS:
+
+```
+[data-slide-item='hide-prev'],
+[data-slide-item='hide-prev'] {
+	visibility: visible;
+	z-index: 2;
+	animation: fadeOut 450ms cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
+}
+
+[data-slide-item='show-prev'],
+[data-slide-item='show-next'] {
+	z-index: 1;
+}
+
+.c-slide__item--current {
+	position: relative;
+	visibility: visible;
+}
 ```
