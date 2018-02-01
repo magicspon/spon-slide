@@ -54,7 +54,6 @@ import { mapNodesToMachine, eventPromise, animationEnd } from './utils'
 	</div>
 
 */
-
 export default class {
 	defaults = {
 		animationType: 'animation',
@@ -64,10 +63,11 @@ export default class {
 		activeClass: 'c-slide__item--current',
 		loop: false,
 		delay: 3000,
-		wrap: false,
+		wrap: true,
 		dots: true,
 		promiseBefore: false,
 		paginationParent: false,
+		animateOnInit: false,
 		startingIndex: () => 0,
 		paginationWrapper:
 			'<div class="absolute w-full pin-t z-10 flex justify-center"></div>',
@@ -107,7 +107,8 @@ export default class {
 			loop,
 			wrap,
 			dots,
-			startingIndex
+			startingIndex,
+			animateOnInit
 		} = this.options
 		const $item = this.$el.querySelector(`.${activeClass}`)
 
@@ -130,7 +131,7 @@ export default class {
 		dots && this._renderPager(this.startingIndex)
 		loop && this._loop()
 
-		this.goTo(this.currentIndex)
+		this.animateOnInit && this.goTo(this.startingIndex)
 
 		this.started = true
 		return this
@@ -195,7 +196,6 @@ export default class {
 	 */
 	prev = e => {
 		e && e.preventDefault()
-		this.emit('spon:prev')
 		this._transition(this.currentIndex, 'PREV')
 	}
 
@@ -207,7 +207,6 @@ export default class {
 	 */
 	next = e => {
 		e && e.preventDefault()
-		this.emit('spon:next')
 		this._transition(this.currentIndex, 'NEXT')
 	}
 
@@ -261,8 +260,6 @@ export default class {
 			this._updateButtonStates(state)
 		}
 
-		if (loop) this._cancelLoop()
-
 		if (animationType === 'animation' || animationType === 'transition') {
 			this.before({
 				...beforeProps
@@ -282,6 +279,12 @@ export default class {
 				}).then(() => {
 					this.emit('spon:after', props)
 				})
+				this.isRuning = false
+
+				if (loop) {
+					this._cancelLoop()
+					this._loop()
+				}
 
 				$next.classList.add(activeClass)
 				$next.setAttribute(
@@ -290,9 +293,6 @@ export default class {
 				)
 				dots && this._updatePagerButtons(state)
 				this.currentIndex = state
-
-				this.isRuning = false
-				if (loop) this._loop()
 			})
 		} else {
 			this._customTransition(beforeProps).then(() => {
@@ -300,7 +300,7 @@ export default class {
 				this.emit('spon:after', props)
 				this.currentIndex = state
 				this.isRuning = false
-				if (loop) this._loop()
+				//	if (loop) this._loop()
 			})
 		}
 	}
@@ -313,6 +313,13 @@ export default class {
 	 */
 	_transition = (state, action) => {
 		const newState = this.machine[state][action]
+
+		this.emit(`spon:${action.toLowerCase()}`, {
+			current: this.currentIndex,
+			next: newState.index,
+			slides: this.$slides
+		})
+
 		this.goTo(newState.index)
 	}
 
@@ -411,6 +418,6 @@ export default class {
 	 */
 	_cancelLoop = () => {
 		cancelAnimationFrame(this.handle)
-		clearTimeout(this.timetimerout)
+		clearTimeout(this.timer)
 	}
 }
