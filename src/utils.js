@@ -1,5 +1,3 @@
-import once from 'lodash.once'
-
 export const mapNodesToMachine = ($Elements, wrap = true) => {
 	return $Elements.map(($node, i, a) => {
 		return {
@@ -36,15 +34,22 @@ export const mapNodesToMachine = ($Elements, wrap = true) => {
 	})
 }
 
-export const eventPromise = (event, element, callback) => {
-	function onEnd(resolve) {
-		resolve()
-		element.removeEventListener(event, onEnd)
+export const eventPromise = (event, element, callback = () => {}) => {
+	let complete = false
+
+	const done = (resolve, e) => {
+		e.stopPropagation()
+		element.removeEventListener(event, done)
+		if (e.target === element && !complete) {
+			complete = true
+			callback()
+			resolve()
+			return
+		}
 	}
 
 	return new Promise(resolve => {
-		element.addEventListener(event, once(onEnd.bind(null, resolve)))
-		callback()
+		element.addEventListener(event, done.bind(null, resolve), false)
 	})
 }
 
