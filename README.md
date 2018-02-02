@@ -36,6 +36,7 @@ promiseBefore: {Boolean}
 paginationParent: {Boolean}
 dotsWrapper: {String} - html
 dotsButtons: {Function(items)} - must return an array eg: ['<button></button>','<button></button>']
+accessibility: {Boolean} - enable keyboard controls
 ```
 
 ### Events:

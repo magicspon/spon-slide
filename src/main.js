@@ -37,7 +37,7 @@ const domify = (() => {
 	}
 })()
 
-export const animationEnd = () => {
+const animationEnd = () => {
 	const types = {
 		OAnimation: 'oAnimationEnd',
 		WebkitAnimation: 'webkitAnimationEnd',
@@ -101,13 +101,13 @@ export const animationEnd = () => {
 	</div>
 
 */
-export default class {
+export default class SponSlide {
 	defaults = {
 		animationType: 'animation',
 		selector: '[data-slide-item]',
 		previousButton: '[data-slide-prev]',
 		nextButton: '[data-slide-next]',
-		activeClass: 'is-current',
+		activeClass: 'c-slide__item--current',
 		loop: false,
 		delay: 3000,
 		wrap: true,
@@ -117,6 +117,7 @@ export default class {
 		animateOnInit: false,
 		startingIndex: () => 0,
 		paginationWrapper: '<div></div>',
+		accessibility: true,
 		paginationButtons: slides => slides.map(() => '<button />')
 	}
 
@@ -153,7 +154,8 @@ export default class {
 			wrap,
 			dots,
 			startingIndex,
-			animateOnInit
+			animateOnInit,
+			accessibility
 		} = this.options
 		const $item = this.$el.querySelector(`.${activeClass}`)
 
@@ -164,6 +166,11 @@ export default class {
 
 		this.handle
 		this.timer
+
+		if (accessibility) {
+			this.$el.tabIndex = 0
+			this.$el.addEventListener('keydown', this.onKeyDown)
+		}
 
 		!$item && this.$slides[0].classList.add(activeClass)
 		this.startingIndex = startingIndex(this.$slides)
@@ -254,6 +261,25 @@ export default class {
 		this._transition(this.currentIndex, 'NEXT')
 	}
 
+	onKeyDown = e => {
+		if (
+			!this.options.accessibility ||
+			(document.activeElement && document.activeElement !== this.$el)
+		) {
+			return
+		}
+
+		const { keyCode } = e
+
+		if (keyCode === 37) {
+			this.prev()
+		}
+
+		if (keyCode === 39) {
+			this.next()
+		}
+	}
+
 	/**
 	 * Function to run before updating the dom
 	 *
@@ -279,7 +305,14 @@ export default class {
 	goTo = state => {
 		if ((this.currentIndex === state && this.started) || this.isRuning) return
 		this.isRuning = true
-		const { activeClass, loop, animationType, dots, wrap } = this.options
+		const {
+			activeClass,
+			loop,
+			animationType,
+			dots,
+			wrap,
+			accessibility
+		} = this.options
 		const forwards =
 			(state > this.currentIndex ||
 				(state === 0 && this.currentIndex === this.total)) &&
@@ -287,6 +320,11 @@ export default class {
 
 		const $current = this.$slides[this.currentIndex]
 		const $next = this.$slides[state]
+
+		if (accessibility) {
+			$current.setAttribute('aria-hidden', true)
+			$next.setAttribute('aria-hidden', false)
+		}
 
 		const props = {
 			direction: forwards ? 'forwards' : 'backwards',
@@ -314,7 +352,7 @@ export default class {
 					.filter((_, index) => index !== this.currentIndex && index !== state)
 					.forEach(node => node.setAttribute('data-slide-item', ''))
 
-				eventPromise(animationEnd('animation'), $current, () => {
+				eventPromise('animationend webkitAnimationEnd', $current, () => {
 					$current.classList.remove(activeClass)
 					$current.setAttribute(
 						'data-slide-item',
