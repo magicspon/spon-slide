@@ -37,6 +37,19 @@ const domify = (() => {
 	}
 })()
 
+export const animationEnd = () => {
+	const types = {
+		OAnimation: 'oAnimationEnd',
+		WebkitAnimation: 'webkitAnimationEnd',
+		MozAnimation: 'animationend',
+		animation: 'animationend'
+	}
+	const elem = document.createElement('fake')
+	return Object.keys(types).reduce(function(prev, trans) {
+		return undefined !== elem.style[trans] ? types[trans] : prev
+	}, '')
+}
+
 /*
 	Options:
 
@@ -302,7 +315,7 @@ export default class {
 					.filter((_, index) => index !== this.currentIndex && index !== state)
 					.forEach(node => node.setAttribute('data-slide-item', ''))
 
-				eventPromise('animationend webkitAnimationEnd', $current, () => {
+				eventPromise(animationEnd('animation'), $current, () => {
 					$current.classList.remove(activeClass)
 					$current.setAttribute(
 						'data-slide-item',
