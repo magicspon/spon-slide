@@ -352,7 +352,7 @@ export default class SponSlide {
 					.filter((_, index) => index !== this.currentIndex && index !== state)
 					.forEach(node => node.setAttribute('data-slide-item', ''))
 
-				eventPromise('animationend webkitAnimationEnd', $current, () => {
+				eventPromise(animationEnd(), $current, () => {
 					$current.classList.remove(activeClass)
 					$current.setAttribute(
 						'data-slide-item',
