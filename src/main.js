@@ -277,7 +277,6 @@ export default class {
 	 * @return void
 	 */
 	goTo = state => {
-		log(state)
 		if ((this.currentIndex === state && this.started) || this.isRuning) return
 		this.isRuning = true
 		const { activeClass, loop, animationType, dots, wrap } = this.options
