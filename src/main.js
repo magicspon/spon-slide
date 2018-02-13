@@ -195,7 +195,7 @@ export default class SponSlide {
 	 * @return this
 	 */
 	reset = () => {
-		const { selector, activeClass, loop, wrap } = this.option
+		const { selector, activeClass, loop, wrap } = this.options
 		const i = this.$nodes.indexOf(this.$el.querySelector(`.${activeClass}`))
 		if (loop) this._cancelLoop()
 		this.currentIndex = i > -1 ? i : 0
@@ -212,7 +212,7 @@ export default class SponSlide {
 	 * @return this
 	 */
 	destroy = () => {
-		const { activeClass, loop, dots } = this.option
+		const { activeClass, loop, dots } = this.options
 		if (loop) this._cancelLoop()
 
 		if (this.$prevBtn) {
