@@ -233,7 +233,7 @@ export default class SponSlide {
 		}
 
 		this.$slides[this.currentIndex].classList.remove(activeClass)
-		this.$slides.forEach(node => node.setAttribute('data-slide-item'))
+		this.$slides.forEach(node => node.setAttribute('data-slide-item', ''))
 		this.$slides = []
 		this.off('*')
 		return this
