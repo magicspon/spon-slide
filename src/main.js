@@ -329,7 +329,9 @@ export default class SponSlide {
 		const props = {
 			direction: forwards ? 'forwards' : 'backwards',
 			currentEl: $current,
-			nextEl: $next
+			nextEl: $next,
+			newIndex: state,
+			currentIndex: this.currentIndex
 		}
 
 		const beforeProps = {
@@ -343,10 +345,8 @@ export default class SponSlide {
 		}
 
 		if (animationType !== 'custom') {
-			this.before({
-				...beforeProps
-			}).then(() => {
-				this.emit('spon:change', beforeProps)
+			this.before(props).then(() => {
+				this.emit('spon:change', props)
 
 				this.$slides
 					.filter((_, index) => index !== this.currentIndex && index !== state)
