@@ -34,7 +34,7 @@ dots: {Boolean}
 startingIndex: {Function(items)} - must return {Number}
 promiseBefore: {Boolean}
 paginationParent: {Boolean}
-dotsWrapper: {String} - html
+paginationWrapper: {String} - html - <div class="ofsanfisa"></div>
 dotsButtons: {Function(items)} - must return an array eg: ['<button></button>','<button></button>']
 accessibility: {Boolean} - enable keyboard controls
 ```
@@ -83,7 +83,7 @@ $n.setOptions(o) - update optios object
 
 ```
 [data-slide-item='hide-prev'],
-[data-slide-item='hide-prev'] {
+[data-slide-item='hide-next'] {
 	visibility: visible;
 	z-index: 2;
 	animation: fadeOut 450ms cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
