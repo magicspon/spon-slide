@@ -162,7 +162,7 @@ export default class SponSlide {
 		this.$slides = [...this.$el.querySelectorAll(selector)]
 		this.total = this.$slides.length - 1
 		this.$prevBtn = previousButton && this.$el.querySelector(previousButton)
-		this.$nextBtn = nextButton && this.$el.querySelector('[data-slide-next]')
+		this.$nextBtn = nextButton && this.$el.querySelector(nextButton)
 
 		this.handle
 		this.timer
